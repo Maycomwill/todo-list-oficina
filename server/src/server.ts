@@ -3,11 +3,16 @@ import { UserRoutes } from "./routes/user";
 import { TaskRoutes } from "./routes/task";
 import { AuthRoutes } from "./routes/auth";
 import { config } from "dotenv";
+import cors from 'cors'
+
 
 config();
 
 const app = express();
 
+app.use(cors({
+  origin: "*"
+}))
 app.use("/user", UserRoutes);
 app.use("/task", TaskRoutes);
 app.use("/auth", AuthRoutes);
