@@ -31,7 +31,9 @@ router.post("/login", json(), async (req, res) => {
     }
     const token = utils.generateToken(user.id);
 
-    return res.status(200).send({ message: "Login efetuado", data: token });
+    return res
+      .status(200)
+      .send({ message: "Login efetuado", data: { token, id: user.id } });
   } catch (error) {
     if (error instanceof ZodError || error instanceof Error) {
       return res.status(500).send({ message: error.message, data: error });
@@ -49,6 +51,6 @@ router.post("/verify", json(), async (req, res) => {
 
   const verify = utils.verifyToken(token);
 
-  return res.status(200).send({ message: "", data: verify });
+  return res.status(200).send({ message: "Token válido", data: verify });
 });
 export const AuthRoutes = router;

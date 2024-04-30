@@ -1,14 +1,49 @@
+import { useEffect } from "react";
+import useAuth from "../hooks/useAuth";
+import { useTasks } from "../hooks/useTasks";
+import CreateTask from "../components/Dialogs/CreateTask";
+import UpdateTask from "../components/Dialogs/UpdateTask";
+import DeleteTask from "../components/Dialogs/DeleteTask";
+
 export default function Home() {
-  function Button(){
-    return (<button className="py-2 px-4 bg-blue-500">Clique</button>)
-  }
-  
+  const { getTasks, tasks } = useTasks();
+  const id = window.localStorage.getItem("oficina-id");
+  useEffect(() => {
+    if (id !== null) {
+      getTasks(id);
+    }
+  }, []);
+  const { logout } = useAuth();
+
   return (
     <div>
       <h1>Home</h1>
-      <Button />
-      <Button />
-      <Button />
+      <div>
+        <ul>
+          {tasks.length !== 0
+            ? tasks.map((task) => {
+                let completed = "";
+                if (task.isCompleted === false) {
+                  completed = "Não";
+                }
+                completed = "Sim";
+
+                return (
+                  <li>
+                    <div>
+                      <p>
+                        {task.name} | {completed} | {task.updatedAt}
+                      </p>
+                      <UpdateTask task={task} />
+                      <DeleteTask task={task} />
+                    </div>
+                  </li>
+                );
+              })
+            : null}
+        </ul>
+        <CreateTask id={String(id)} />
+      </div>
     </div>
   );
 }

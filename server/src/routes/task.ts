@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 router.get("/user/:id", async (req, res) => {
   try {
     const paramsSchema = z.object({
-      id: z.string().cuid(),
+      id: z.string().uuid(),
     });
 
     const { id } = paramsSchema.parse(req.params);

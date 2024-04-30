@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from "react";
 
 interface InputContentProps extends InputHTMLAttributes<HTMLInputElement> {
-  type: "email" | "password";
+  type: "email" | "password" | "text";
   placeholder: string;
   label: string;
 }
