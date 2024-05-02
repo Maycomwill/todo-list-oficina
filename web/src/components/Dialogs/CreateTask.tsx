@@ -18,19 +18,15 @@ function CreateTask({ id }: { id: string }) {
   }
   return (
     <Dialog.Root open={open}>
-      <Dialog.Trigger>
-        <Button.Root>
-          <Button.Content
-            onClick={() => setOpen(true)}
-            text="Criar tarefa"
-            type="button"
-          />
+      <Dialog.Trigger asChild>
+        <Button.Root type="button" onClick={() => setOpen(true)}>
+          <Button.Content text="Criar tarefa" />
         </Button.Root>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/20" />
-        <Dialog.Content className="fixed inset-0 z-10 flex w-full flex-col overflow-hidden bg-blue-900 bg-cover text-zinc-100 outline-none md:inset-auto md:left-1/2 md:top-1/2 md:h-[60vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
-          <Dialog.Close className="roudend-md absolute right-0 top-0 bg-blue-950 p-1.5 text-blue-100 hover:text-red-600">
+        <Dialog.Content className="fixed inset-0 z-10 flex w-full flex-col overflow-hidden bg-pattern bg-cover text-zinc-100 outline-none md:inset-auto md:left-1/2 md:top-1/2 md:h-[60vh] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-md">
+          <Dialog.Close className="roudend-md absolute right-0 top-0 bg-blue-900 p-1.5 text-blue-100 hover:text-red-600">
             <X className="size-5" onClick={() => setOpen(false)} />
           </Dialog.Close>
           <form onSubmit={handleCreateTask} className="w-full pt-12">
@@ -46,8 +42,8 @@ function CreateTask({ id }: { id: string }) {
               </Input.Root>
             </div>
             <div className="fixed bottom-0 w-full">
-              <Button.Root>
-                <Button.Content type="submit" text="Criar" />
+              <Button.Root type="submit">
+                <Button.Content text="Criar" />
               </Button.Root>
             </div>
           </form>

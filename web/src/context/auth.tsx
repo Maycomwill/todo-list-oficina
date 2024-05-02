@@ -1,11 +1,21 @@
 import { AxiosError } from "axios";
 import { createContext, ReactNode, useEffect, useState } from "react";
 import api from "../lib/axios";
+import { TaskProps } from "./task";
+import { toast } from "sonner";
+
+export interface UserProps {
+  name: string;
+  id: string;
+  email: string;
+  tasks: TaskProps[];
+}
 
 export interface AuthContextProps {
   login: (email: string, password: string) => void;
   logout: () => void;
   auth: boolean;
+  user: UserProps | undefined;
   isLoading: boolean;
 }
 
@@ -20,6 +30,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
     return;
   }, []);
   const [auth, setAuth] = useState(false);
+  const [user, setUser] = useState<UserProps>();
   const [isLoading, setIsLoading] = useState(false);
   async function login(email: string, password: string) {
     try {
@@ -28,16 +39,17 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
         email,
         password,
       });
+      setUser(login.data.data.user);
       window.localStorage.setItem("oficina-token", login.data.data.token);
-      window.localStorage.setItem("oficina-id", login.data.data.id);
-
+      window.localStorage.setItem("oficina-id", login.data.data.user.id);
+      toast.success(login.data.message);
       return setTimeout(() => {
         setAuth(true);
-        setIsLoading(false), 5000;
+        setIsLoading(false), 2000;
       });
     } catch (error) {
       if (error instanceof AxiosError) {
-        return alert(error.message);
+        return toast.error(error.message);
       }
     }
   }
@@ -47,10 +59,10 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       const verify = await api.post("/auth/verify", {
         token,
       });
-      console.log(verify);
       if (verify.data.data) {
+        setUser(verify.data.data.user);
         setAuth(true);
-        return alert("Login autorizado");
+        return;
       }
       window.localStorage.removeItem("oficina-token");
       window.localStorage.removeItem("oficina-id");
@@ -59,7 +71,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
       if (error instanceof AxiosError) {
         window.localStorage.removeItem("oficina-token");
         window.localStorage.removeItem("oficina-id");
-        return alert(error.message);
+        return toast.error(error.message);
       }
     }
   }
@@ -71,7 +83,7 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ login, logout, auth, isLoading }}>
+    <AuthContext.Provider value={{ login, logout, auth, user, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

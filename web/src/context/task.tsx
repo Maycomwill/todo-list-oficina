@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useState } from "react";
 import api from "../lib/axios";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 export interface TaskProps {
   name: string;
@@ -48,13 +49,13 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
         name,
         userId: id,
       });
-
+      toast.success(newTask.data.message);
       return setTimeout(() => {
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
-        return alert(error.message);
+        return toast.error(error.message);
       }
     }
   }
@@ -66,13 +67,13 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
         isCompleted,
       });
 
+      toast.success(update.data.message);
       return setTimeout(() => {
-        alert(update.data.message);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
-        return alert(error.message);
+        return toast.error(error.message);
       }
     }
   }
@@ -81,13 +82,13 @@ export function TaskContextProvider({ children }: { children: ReactNode }) {
     try {
       const deleteTask = await api.delete(`/task/${id}`);
 
+      toast.success(deleteTask.data.message);
       return setTimeout(() => {
-        alert(deleteTask.data.message);
         window.location.reload();
-      }, 2000);
+      }, 1000);
     } catch (error) {
       if (error instanceof AxiosError) {
-        return alert(error.message);
+        return toast.error(error.message);
       }
     }
   }
